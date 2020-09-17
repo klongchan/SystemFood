@@ -41,5 +41,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+    
+    <key>io.flutter.embedded_views_preview</key>
+    <true/>
+    
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>System Food App requires access to your Location for Find Lat and Lng</string>
+    
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>System Food App requires access to your Location for Find Lat and Lng</string>
+    
 </dict>
 </plist>

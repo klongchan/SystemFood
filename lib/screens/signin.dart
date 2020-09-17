@@ -7,6 +7,7 @@ import 'package:systemfood/model/user_model.dart';
 import 'package:systemfood/screens/main_rider.dart';
 import 'package:systemfood/screens/main_shop.dart';
 import 'package:systemfood/screens/main_user.dart';
+import 'package:systemfood/utility/my_constant.dart';
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/normal_dialog.dart';
 class SignIn extends StatefulWidget {
@@ -77,7 +78,7 @@ class _SignInState extends State<SignIn> {
       );
 
   Future<Null> CheckAuthen()async{
-    String url = 'http://192.168.56.1/RiwFood/getUserWhereUser.php?isAdd=true&User=$user';
+    String url = '${MyConstant().domain}/RiwFood/getUserWhereUser.php?isAdd=true&User=$user';
     try {
 
       Response response = await Dio().get(url);
