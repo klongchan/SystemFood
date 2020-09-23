@@ -35,7 +35,7 @@ class _MainShopState extends State<MainShop> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            nameUser == null ? 'Main Shop' : '$nameUser เจ้าของร้าน login'),
+            nameUser == null ? 'Main Shop' : '$nameUser หน้าร้าน login'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
