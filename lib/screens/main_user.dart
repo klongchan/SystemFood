@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/signout_process.dart';
+import 'package:systemfood/widget/show_list_shop_all.dart';
+import 'package:systemfood/widget/show_status_food_order.dart';
 
 class MainUser extends StatefulWidget {
   @override
@@ -10,10 +13,12 @@ class MainUser extends StatefulWidget {
 
 class _MainUserState extends State<MainUser> {
   String nameUser;
+  Widget currentWidget;
 
   @override
   void initState() {
     super.initState();
+    currentWidget = ShowListShopAll();
     findUser();
   }
 
@@ -37,23 +42,86 @@ class _MainUserState extends State<MainUser> {
         ],
       ),
       drawer: showDrawer(),
+      body: currentWidget,
     );
   }
 
   Drawer showDrawer() => Drawer(
-        child: ListView(
+        child: Stack(
           children: <Widget>[
-            showHead(),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                showHead(),
+                menuListShop(),
+                menuStatusFoodOrder(),
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                menuSignOut(),
+              ],
+            ),
           ],
         ),
       );
+
+  ListTile menuListShop() {
+    return ListTile(
+      onTap: () {
+        Navigator.pop(context);
+        setState(() {
+          currentWidget = ShowListShopAll();
+        });
+      },
+      leading: Icon(Icons.home),
+      title: Text('แสดงร้านค้า'),
+      subtitle: Text('แสดงร้านค้า ที่สามารถสั่งอาหารได้'),
+    );
+  }
+
+  ListTile menuStatusFoodOrder() {
+    return ListTile(
+      onTap: () {
+        Navigator.pop(context);
+        setState(() {
+          currentWidget = ShowStatusFoodOrder();
+        });
+      },
+      leading: Icon(Icons.restaurant_menu),
+      title: Text('แสดงรายการอาหารที่สั่ง'),
+      subtitle: Text('แสดงรานการอาหารที่สั่ง และ หรือ ดูสถานะของอาหารที่สั่ง'),
+    );
+  }
+
+  Widget menuSignOut() {
+    return Container(
+      decoration: BoxDecoration(color: Colors.deepOrange.shade300),
+      child: ListTile(
+        onTap: () => signOutProcess(context),
+        leading: Icon(
+          Icons.exit_to_app,
+          color: Colors.white,
+        ),
+        title: Text(
+          'Sign Out',
+          style: TextStyle(color: Colors.white),
+        ),
+        subtitle: Text(
+          'ออกจากแอพ',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+    );
+  }
 
   UserAccountsDrawerHeader showHead() {
     return UserAccountsDrawerHeader(
       decoration: MyStyle().myBoxDecoration('user1.jpg'),
       currentAccountPicture: MyStyle().showLogo(),
       accountName: Text(
-        'Name Login',
+        nameUser == null ? 'Name Login' : nameUser,
         style: TextStyle(color: MyStyle().darkColor),
       ),
       accountEmail: Text(
