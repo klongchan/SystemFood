@@ -1,7 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:location/location.dart';
 import 'package:systemfood/model/user_model.dart';
 import 'package:systemfood/utility/my_constant.dart';
-import 'package:systemfood/utility/my_style.dart';
 
 class AboutShop extends StatefulWidget {
   final UserModel userModel;
@@ -12,12 +15,70 @@ class AboutShop extends StatefulWidget {
 
 class _AboutShopState extends State<AboutShop> {
   UserModel userModel;
+  double lat1, lng1, lat2, lng2, distance;
+  String distanceString;
+  int transport;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     userModel = widget.userModel;
+
+    findLat1Lng1();
+  }
+
+  Future<Null> findLat1Lng1() async {
+    LocationData locationData = await findLocationData();
+    setState(() {
+      lat1 = locationData.latitude;
+      lng1 = locationData.longitude;
+      lat2 = double.parse(userModel.lat);
+      lng2 = double.parse(userModel.lng);
+      print('lat1 = $lat1, lng1 = $lng1, lat2 = $lat2, lng2 = $lng2');
+      distance = calculateDistance(lat1, lng1, lat2, lng2);
+
+      var myFomat = NumberFormat('#0.0#', 'en_US');
+      distanceString = myFomat.format(distance);
+
+      transport = calculateTransport(distance);
+
+      print('distance = $distance');
+      print('transport = $transport');
+    });
+  }
+
+  int calculateTransport(double distance) {
+    int transport;
+    if (distance < 1.0) {
+      transport = 35;
+      return transport;
+    } else {
+      transport = 35 + (distance - 1).round() * 10;
+      return transport;
+    }
+  }
+
+  double calculateDistance(double lat1, double lng1, double lat2, double lng2) {
+    double distance = 0;
+
+    var p = 0.017453292519943295;
+    var c = cos;
+    var a = 0.5 -
+        c((lat2 - lat1) * p) / 2 +
+        c(lat1 * p) * c(lat2 * p) * (1 - c((lng2 - lng1) * p)) / 2;
+    distance = 12742 * asin(sqrt(a));
+
+    return distance;
+  }
+
+  Future<LocationData> findLocationData() async {
+    Location location = Location();
+    try {
+      return await location.getLocation();
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
@@ -45,8 +106,15 @@ class _AboutShopState extends State<AboutShop> {
         ListTile(
           leading: Icon(Icons.phone),
           title: Text(userModel.phone),
-        ), ListTile(leading: Icon(Icons.directions_bike),title: Text('123 กิโลเมตร'),),
-        ListTile(leading: Icon(Icons.transfer_within_a_station),title: Text('123 บาท'),)
+        ),
+        ListTile(
+          leading: Icon(Icons.directions_bike),
+          title: Text(distance == null ? '' : '$distanceString กิโลเมตร'),
+        ),
+        ListTile(
+          leading: Icon(Icons.transfer_within_a_station),
+          title: Text(transport == null ? '' : '$transport บาท'),
+        )
       ],
     );
   }
