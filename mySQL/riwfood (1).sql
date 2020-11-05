@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 23, 2020 at 10:37 AM
+-- Generation Time: Nov 03, 2020 at 05:03 AM
 -- Server version: 10.4.13-MariaDB
 -- PHP Version: 7.4.8
 
@@ -43,10 +43,13 @@ CREATE TABLE `foodtable` (
 INSERT INTO `foodtable` (`id`, `idShop`, `NameFood`, `PathImage`, `Price`, `Detail`) VALUES
 (1, '$idShop', '$nameFood', '$urlPathImage', '$price', '$detail'),
 (2, '8', 'กระเพาเป็ด', '/RiwFood/Food/food502776.jpg', '50', 'กระเพาเป็ดเผ็ดมาก'),
-(3, '8', 'กระเพาหมูกรอบ', '/RiwFood/Food/food312509.jpg', '60', 'หมูกรอบเผ็ดมาก'),
+(3, '8', 'กระเพาหมูนิ่ม', '/RiwFood/Food/food312509.jpg', '50', 'หมู'),
 (4, '$idShop', '$nameFood', '$urlPathImage', '$price', '$detail'),
 (5, '8', 'ข้าวหน้าเป็ด', '/RiwFood/Food/food146341.jpg', '50', 'อร่อย'),
-(8, '8', 'เป็ดกระเทียม', '/RiwFood/Food/food819309.jpg', '60', 'อร่อย\nสะอาด\nอิ่ม');
+(8, '8', 'เป็ด', '/RiwFood/Food/food819309.jpg', '40', 'อร่อย'),
+(10, '13', 'เตี๋ยวเป็ดบ่าง', '/RiwFood/Food/food497976.jpg', '50', 'อร่อยเยอะ'),
+(12, '10', 'เตี๋ยวเป็ดบ่าง', '/RiwFood/Food/food497976.jpg', '50', 'อร่อยเยอะ'),
+(14, '7', 'ข้าวเป็ดกระเทียม', '/RiwFood/Food/food161480.jpg', '60', 'อร่อย');
 
 -- --------------------------------------------------------
 
@@ -78,11 +81,11 @@ INSERT INTO `usertable` (`id`, `ChooseType`, `Name`, `User`, `Password`, `NameSh
 (2, 'User', 'TestName2', 'user2', '1234', 'nameshop', 'address', 'phone', 'urlimage', 'lat', 'lng', ''),
 (4, 'Shop\r\n', 'boy', 'user3', '1234', 'nameshop', 'address', 'phone', 'urlimage', 'lat', 'lng', ''),
 (6, 'User', 'Flutter1', 'f1', '1234', '', '', '', '', '', '', ''),
-(7, 'Shop', 'flutter2', 'f2', '1234', 'ริว เป็ด ตุ๋น', '1234\r\nกม.8 รามอินทรา', '', '', '', '', ''),
-(8, 'Shop', 'Test123', 'nodi', '123456', 'ก๋วยเตี๋ยว เรือเจ้าเก่า ครัวแม่ฉิม', 'ปัญญา  P4', '123456', '/RiwFood/shop/editShop4582.jpg', '0.0', '0.0', ''),
+(7, 'Shop', 'flutter2', 'f2', '1234', 'ริว เป็ด ตุ๋น', '1234\r\nกม.8 รามอินทรา', '', '', '13.836578', '100.662080', ''),
+(8, 'Shop', 'Test123', 'nodi', '123456', 'ก๋วยเตี๋ยว เรือเจ้าเก่า ครัวแม่ฉิม', 'ปัญญา  P4', '123456', '/RiwFood/shop/editShop4582.jpg', '13.836197', '100.688439', ''),
 (9, 'Rider', 'rider', 'rider5', '1234', '', '', '', '', '', '', ''),
-(10, 'Shop', 'มาสเตอร์เจ้าของร้าน', 'mastershop', '123456', 'ริวเป็ดย่าง', '45 นวมินทร์', '1234567', '/RiwFood/shop/shop729402.jpg', '13.837707', '100.661942', ''),
-(13, 'Shop', 'Testshop1', 'shop1', '1234', '', '', '', '', '', '', '');
+(10, 'Shop', 'มาสเตอร์เจ้าของร้าน', 'mastershop', '123456', 'ริวเป็ดย่าง', '45 นวมินทร์', '1234567', '/RiwFood/shop/shop729402.jpg', '13.838918', '100.661513', ''),
+(13, 'Shop', 'Testshop1', 'shop1', '1234', 'ก๋วยเตี๋ยวหมูต้มยำ', 'ปัญญา', '123456', '/RiwFood/shop/shop37724.jpg', '13.836171', '100.685474', '');
 
 --
 -- Indexes for dumped tables
@@ -108,7 +111,7 @@ ALTER TABLE `usertable`
 -- AUTO_INCREMENT for table `foodtable`
 --
 ALTER TABLE `foodtable`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `usertable`
