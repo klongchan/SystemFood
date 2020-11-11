@@ -4,11 +4,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
+import 'package:systemfood/model/cart_model.dart';
 import 'package:systemfood/model/food_model.dart';
 import 'package:systemfood/model/user_model.dart';
 import 'package:systemfood/utility/my_api.dart';
 import 'package:systemfood/utility/my_constant.dart';
 import 'package:systemfood/utility/my_style.dart';
+import 'package:systemfood/utility/normal_dialog.dart';
+import 'package:systemfood/utility/sqlite_helper.dart';
 
 class ShowMenuFood extends StatefulWidget {
   final UserModel userModel;
@@ -261,5 +264,41 @@ class _ShowMenuFoodState extends State<ShowMenuFood> {
 
     print(
         'idShop = $idShop, nameShop = $nameShop, idFood = $idFood, nameFood = $nameFood, price = $price, amount = $amount, sum = $sumInt, distance = $distanceString, transport = $transport');
+
+    Map<String, dynamic> map = Map();
+
+    map['idShop'] = idShop;
+    map['nameShop'] = nameShop;
+    map['idFood'] = idFood;
+    map['nameFood'] = nameFood;
+    map['price'] = price;
+    map['amount'] = amount.toString();
+    map['sum'] = sumInt.toString();
+    map['distance'] = distanceString;
+    map['transport'] = transport.toString();
+
+    print('map ==> ${map.toString()}');
+
+    CartModel cartModel = CartModel.fromJson(map);
+
+    var object = await SQLiteHelper().readAllDataFromSQLite();
+    print('object lenght = ${object.length}');
+
+    if (object.length == 0) {
+      await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
+        print('Insert Success');
+      });
+    } else {
+      String idShopSQLite = object[0].idShop;
+      print('idShopSQLite ==>> $idShopSQLite');
+      if (idShop == idShopSQLite) {
+        await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
+          print('Insert Success');
+        });
+      } else {
+        normalDialog(context,
+            'ตะกร้ามี รายการอาหารของร้าน ${object[0].nameShop} กรุณาซื้อจากร้านนี้ให้ เสร็จก่อน ค่ะ');
+      }
+    }
   }
 }
