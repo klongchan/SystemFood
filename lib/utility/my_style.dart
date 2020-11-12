@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:systemfood/screens/show_cart.dart';
 
 class MyStyle {
   Color darkColor = Colors.blue.shade900;
   Color primaryColor = Colors.green;
+
+  Widget iconShowCart(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.add_shopping_cart),
+      onPressed: () {
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => ShowCart(),
+        );
+        Navigator.push(context, route);
+      },
+    );
+  }
 
   Widget showProgress() {
     return Center(
@@ -69,7 +82,7 @@ class MyStyle {
         ),
       );
 
-      Text showTitleH3(String title) => Text(
+  Text showTitleH3(String title) => Text(
         title,
         style: TextStyle(
           fontSize: 16.0,

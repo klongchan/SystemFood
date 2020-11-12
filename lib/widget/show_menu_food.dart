@@ -12,6 +12,7 @@ import 'package:systemfood/utility/my_constant.dart';
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/normal_dialog.dart';
 import 'package:systemfood/utility/sqlite_helper.dart';
+import 'package:toast/toast.dart';
 
 class ShowMenuFood extends StatefulWidget {
   final UserModel userModel;
@@ -287,6 +288,7 @@ class _ShowMenuFoodState extends State<ShowMenuFood> {
     if (object.length == 0) {
       await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
         print('Insert Success');
+        showToast('Insert Success');
       });
     } else {
       String idShopSQLite = object[0].idShop;
@@ -294,11 +296,20 @@ class _ShowMenuFoodState extends State<ShowMenuFood> {
       if (idShop == idShopSQLite) {
         await SQLiteHelper().insertDataToSQLite(cartModel).then((value) {
           print('Insert Success');
+          showToast('Insert Success');
         });
       } else {
         normalDialog(context,
             'ตะกร้ามี รายการอาหารของร้าน ${object[0].nameShop} กรุณาซื้อจากร้านนี้ให้ เสร็จก่อน ค่ะ');
       }
     }
+  }
+
+  void showToast(String string) {
+    Toast.show(
+      string,
+      context,
+      duration: Toast.LENGTH_LONG,
+    );
   }
 }

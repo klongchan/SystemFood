@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:systemfood/screens/show_cart.dart';
 
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/signout_process.dart';
@@ -35,6 +36,7 @@ class _MainUserState extends State<MainUser> {
       appBar: AppBar(
         title: Text(nameUser == null ? 'Main User' : '$nameUser ผู้ซื้อ login'),
         actions: <Widget>[
+          MyStyle().iconShowCart(context),
           IconButton(
             icon: Icon(Icons.exit_to_app),
             onPressed: () => signOutProcess(context),
@@ -54,6 +56,7 @@ class _MainUserState extends State<MainUser> {
               children: <Widget>[
                 showHead(),
                 menuListShop(),
+                menuCart(),
                 menuStatusFoodOrder(),
               ],
             ),
@@ -128,6 +131,21 @@ class _MainUserState extends State<MainUser> {
         'Login',
         style: TextStyle(color: MyStyle().primaryColor),
       ),
+    );
+  }
+
+  Widget menuCart() {
+    return ListTile(
+      leading: Icon(Icons.add_shopping_cart),
+      title: Text('ตะกร้าของฉัน'),
+      subtitle: Text('รายการอาหารที่อยู่ใน ตะกร้า ยังไม่ได้ Order'),
+      onTap: () {
+        Navigator.pop(context);
+        MaterialPageRoute route = MaterialPageRoute(
+          builder: (context) => ShowCart(),
+        );
+        Navigator.push(context, route);
+      },
     );
   }
 }
