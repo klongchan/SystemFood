@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:systemfood/model/cart_model.dart';
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/sqlite_helper.dart';
@@ -65,7 +66,8 @@ class _ShowCartState extends State<ShowCart> {
             buildListFood(),
             Divider(),
             buildTotal(),
-            buildClearCartButton()
+            buildClearCartButton(),
+            buildOrdertButton(),
           ],
         ),
       ),
@@ -76,21 +78,50 @@ class _ShowCartState extends State<ShowCart> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
-        RaisedButton.icon(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-            color: MyStyle().primaryColor,
-            onPressed: () {
-              confirmDeleteAllData();
-            },
-            icon: Icon(
-              Icons.delete_outline,
-              color: Colors.white,
-            ),
-            label: Text(
-              'Clear ตะกร้า',
-              style: TextStyle(color: Colors.white),
-            )),
+        Container(
+          width: 150,
+          child: RaisedButton.icon(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              color: MyStyle().primaryColor,
+              onPressed: () {
+                confirmDeleteAllData();
+              },
+              icon: Icon(
+                Icons.delete_outline,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Clear ตะกร้า',
+                style: TextStyle(color: Colors.white),
+              )),
+        ),
+      ],
+    );
+  }
+
+  Widget buildOrdertButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Container(
+          width: 150,
+          child: RaisedButton.icon(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              color: MyStyle().darkColor,
+              onPressed: () {
+                orderThread();
+              },
+              icon: Icon(
+                Icons.fastfood,
+                color: Colors.white,
+              ),
+              label: Text(
+                'Order',
+                style: TextStyle(color: Colors.white),
+              )),
+        ),
       ],
     );
   }
@@ -192,17 +223,18 @@ class _ShowCartState extends State<ShowCart> {
               child: Text(cartModels[index].sum),
             ),
             Expanded(
+                flex: 1,
                 child: IconButton(
-              icon: Icon(Icons.delete_forever),
-              onPressed: () async {
-                int id = cartModels[index].id;
-                print('You Click Delete id = $id');
-                await SQLiteHelper().deleteDataWhereId(id).then((value) {
-                  print('Success Delete id = $id');
-                  readSQLite();
-                });
-              },
-            ))
+                  icon: Icon(Icons.delete_forever),
+                  onPressed: () async {
+                    int id = cartModels[index].id;
+                    print('You Click Delete id = $id');
+                    await SQLiteHelper().deleteDataWhereId(id).then((value) {
+                      print('Success Delete id = $id');
+                      readSQLite();
+                    });
+                  },
+                )),
           ],
         ),
       );
@@ -256,5 +288,41 @@ class _ShowCartState extends State<ShowCart> {
         ],
       ),
     );
+  }
+
+  Future<Null> orderThread() async {
+    DateTime dateTime = DateTime.now();
+    // print(dateTime.toString());
+    String orderDateTime = DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
+
+    String idShop = cartModels[0].idShop;
+    String nameShop = cartModels[0].nameShop;
+    String distance = cartModels[0].distance;
+    String transport = cartModels[0].transport;
+
+    List<String> idFoods = List();
+    List<String> nameFoods = List();
+    List<String> prices = List();
+    List<String> amounts = List();
+    List<String> sums = List();
+
+    for (var model in cartModels) {
+      idFoods.add(model.idFood);
+      nameFoods.add(model.nameFood);
+      prices.add(model.price);
+      amounts.add(model.amount);
+      sums.add(model.sum);
+      
+    }
+
+    String idFood = idFoods.toString();
+    String nameFood = nameFoods.toString();
+    String price = prices.toString();
+    String amount = amounts.toString();
+    String sum = sums.toString();
+
+    print(
+        'orderDateTime = $orderDateTime, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport');
+    print('idFood = $idFood, nameFood = $nameFood, price = $price, amount = $amount, sum = $sum');
   }
 }
