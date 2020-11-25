@@ -1,8 +1,13 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemfood/model/cart_model.dart';
+import 'package:systemfood/utility/my_constant.dart';
 import 'package:systemfood/utility/my_style.dart';
+import 'package:systemfood/utility/normal_dialog.dart';
 import 'package:systemfood/utility/sqlite_helper.dart';
+import 'package:toast/toast.dart';
 
 class ShowCart extends StatefulWidget {
   @override
@@ -312,7 +317,6 @@ class _ShowCartState extends State<ShowCart> {
       prices.add(model.price);
       amounts.add(model.amount);
       sums.add(model.sum);
-      
     }
 
     String idFood = idFoods.toString();
@@ -321,8 +325,34 @@ class _ShowCartState extends State<ShowCart> {
     String amount = amounts.toString();
     String sum = sums.toString();
 
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String idUser = preferences.getString('id');
+    String nameUser = preferences.getString('Name');
+
     print(
-        'orderDateTime = $orderDateTime, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport');
-    print('idFood = $idFood, nameFood = $nameFood, price = $price, amount = $amount, sum = $sum');
+        'orderDateTime = $orderDateTime, idUser = $idUser,nameUser = $nameUser, idShop = $idShop, nameShop = $nameShop, distance = $distance, transport = $transport');
+    print(
+        'idFood = $idFood, nameFood = $nameFood, price = $price, amount = $amount, sum = $sum');
+
+    String url ='${MyConstant().domain}/RiwFood/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idFood=$idFood&NameFood=$nameFood&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=UserOrder';
+
+    await Dio().get(url).then((value) {
+      if (value.toString() == 'true') {
+        clearAllSQLite();
+      } else {
+        normalDialog(context, 'ไม่สามารถ Order ได้ กรุณาลองใหม่');
+      }
+    });
+  }
+
+  Future<Null> clearAllSQLite() async {
+    Toast.show(
+      'Order เรียบร้อยแล้ว ค่ะ',
+      context,
+      duration: Toast.LENGTH_LONG,
+    );
+    await SQLiteHelper().deleteAlldata().then((value) {
+      readSQLite();
+    });
   }
 }
