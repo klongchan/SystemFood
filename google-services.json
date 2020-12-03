@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "61548030261",
+    "project_id": "systemfood-c6599",
+    "storage_bucket": "systemfood-c6599.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:61548030261:android:d64d6d070cd57888a0047c",
+        "android_client_info": {
+          "package_name": "com.cukjsystem.systemfood"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "61548030261-67umh8mibgu93i3ute73fvpnc4dl6j7q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJiH1YPl3q9UD8h3cvC_OcaYbXk0QFKLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "61548030261-67umh8mibgu93i3ute73fvpnc4dl6j7q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
