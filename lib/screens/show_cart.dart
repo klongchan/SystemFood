@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemfood/model/cart_model.dart';
+import 'package:systemfood/model/user_model.dart';
 import 'package:systemfood/utility/my_constant.dart';
 import 'package:systemfood/utility/my_style.dart';
 import 'package:systemfood/utility/normal_dialog.dart';
@@ -334,11 +337,13 @@ class _ShowCartState extends State<ShowCart> {
     print(
         'idFood = $idFood, nameFood = $nameFood, price = $price, amount = $amount, sum = $sum');
 
-    String url ='${MyConstant().domain}/RiwFood/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idFood=$idFood&NameFood=$nameFood&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=UserOrder';
+    String url =
+        '${MyConstant().domain}/RiwFood/addOrder.php?isAdd=true&OrderDateTime=$orderDateTime&idUser=$idUser&NameUser=$nameUser&idShop=$idShop&NameShop=$nameShop&Distance=$distance&Transport=$transport&idFood=$idFood&NameFood=$nameFood&Price=$price&Amount=$amount&Sum=$sum&idRider=none&Status=UserOrder';
 
     await Dio().get(url).then((value) {
       if (value.toString() == 'true') {
         clearAllSQLite();
+        notificationToShop(idShop);
       } else {
         normalDialog(context, 'ไม่สามารถ Order ได้ กรุณาลองใหม่');
       }
@@ -354,5 +359,32 @@ class _ShowCartState extends State<ShowCart> {
     await SQLiteHelper().deleteAlldata().then((value) {
       readSQLite();
     });
+  }
+
+  Future<Null> notificationToShop(String idShop) async {
+    String urlFindToken =
+        '${MyConstant().domain}/RiwFood/getUserWhereId.php?isAdd=true&id=$idShop';
+    await Dio().get(urlFindToken).then((value) {
+      var result = json.decode(value.data);
+      print('result ===> $result');
+      for (var json in result) {
+        UserModel model = UserModel.fromJson(json);
+        String tokenShop = model.token;
+        print('tokenShop ==>> $tokenShop');
+
+        String title = 'มี Order จากลุกค้า';
+        String body = 'มีการสั่งอาหาร จากลูกค้า ครับ';
+        String urlSendToken =
+            '${MyConstant().domain}/RiwFood/apiNotification.php?isAdd=true&token=$tokenShop&title=$title&body=$body';
+
+        sendNotificationToShop(urlSendToken);
+      }
+    });
+  }
+
+  Future<Null> sendNotificationToShop(String urlSendToken) async {
+    await Dio().get(urlSendToken).then(
+          (value) => normalDialog(context, 'ส่ง Order ไปที่ร้านค้าแล้ว ค่ะ'),
+        );
   }
 }
