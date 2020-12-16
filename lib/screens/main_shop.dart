@@ -1,6 +1,10 @@
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemfood/utility/my_style.dart';
+import 'package:systemfood/utility/normal_dialog.dart';
 import 'package:systemfood/utility/signout_process.dart';
 import 'package:systemfood/widget/information_shop.dart';
 import 'package:systemfood/widget/list_food_menu_shop.dart';
@@ -20,8 +24,40 @@ class _MainShopState extends State<MainShop> {
   @override
   void initState() {
     super.initState();
+    aboutNotification();
     findUser();
   }
+
+  Future<Null> aboutNotification() async {
+    if (Platform.isAndroid) {
+      print('aboutNoti Work Android');
+
+      FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+      await firebaseMessaging.configure(
+        onLaunch: (message) {
+          print('Noti onLaunch');
+        },
+        onResume: (message) {
+          print('Noti onResume ${message.toString()}');
+          normalDialog(context, 'มีคนสั่งอาหารเข้ามา ค่ะ');
+        },
+        onMessage: (message) {
+          print('Noti onMessage ${message.toString()}');
+          normalDialog(context, 'มีคนสั่งอาหาร เข้ามาค่ะ');
+        },
+      );
+    } else if (Platform.isIOS) {
+      print('aboutNoti Work iOS');
+    }
+  }
+
+  // String nameUser;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   findUser();
+  // }
 
   Future<Null> findUser() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -34,8 +70,8 @@ class _MainShopState extends State<MainShop> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-            nameUser == null ? 'Main Shop' : '$nameUser หน้าร้าน login'),
+        title:
+            Text(nameUser == null ? 'Main Shop' : '$nameUser หน้าร้าน login'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),
@@ -51,7 +87,7 @@ class _MainShopState extends State<MainShop> {
   Drawer showDrawer() => Drawer(
         child: ListView(
           children: <Widget>[
-            ShowHard(),
+            showHard(),
             homeMenu(),
             foodMenu(),
             informationMenu(),
@@ -102,7 +138,7 @@ class _MainShopState extends State<MainShop> {
         subtitle: Text('Sign Out และ กลับไป หน้าแรก'),
         onTap: () => signOutProcess(context),
       );
-  UserAccountsDrawerHeader ShowHard() {
+  UserAccountsDrawerHeader showHard() {
     return UserAccountsDrawerHeader(
       decoration: MyStyle().myBoxDecoration('store.jpg'),
       currentAccountPicture: MyStyle().showLogo(),

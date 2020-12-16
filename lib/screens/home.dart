@@ -22,6 +22,7 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     checkPreferance();
+    
   }
 
   Future<Null> checkPreferance() async {
@@ -114,4 +115,6 @@ class _HomeState extends State<Home> {
       accountEmail: Text('Please Login'),
     );
   }
+
+  
 }
