@@ -34,16 +34,21 @@ class _MainShopState extends State<MainShop> {
 
       FirebaseMessaging firebaseMessaging = FirebaseMessaging();
       await firebaseMessaging.configure(
-        onLaunch: (message) {
+        onLaunch: (message) async {
           print('Noti onLaunch');
         },
-        onResume: (message) {
+        onResume: (message) async {
+          String title = message['data']['title'];
+          String body = message['data']['body'];
           print('Noti onResume ${message.toString()}');
-          normalDialog(context, 'มีคนสั่งอาหารเข้ามา ค่ะ');
+          print('title = $title, body = $body');
+          normalDialog2(context, title, body);
         },
-        onMessage: (message) {
+        onMessage: (message) async {
           print('Noti onMessage ${message.toString()}');
-          normalDialog(context, 'มีคนสั่งอาหาร เข้ามาค่ะ');
+          String title = message['notification']['title'];
+          String notiMessage = message['notification']['body'];
+          normalDialog2(context, title, notiMessage);
         },
       );
     } else if (Platform.isIOS) {
