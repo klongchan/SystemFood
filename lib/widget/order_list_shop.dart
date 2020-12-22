@@ -20,6 +20,7 @@ class _OrderListShopState extends State<OrderListShop> {
   List<List<String>> listPrices = List();
   List<List<String>> listAmount = List();
   List<List<String>> listSums = List();
+  List<int> totals = List();
 
   @override
   void initState() {
@@ -47,12 +48,18 @@ class _OrderListShopState extends State<OrderListShop> {
         List<String> amounts = MyAPI().createStringArray(model.amount);
         List<String> sums = MyAPI().createStringArray(model.sum);
 
+        int total = 0;
+        for (var item in sums) {
+          total = total + int.parse(item);
+        }
+
         setState(() {
           orderModels.add(model);
           listNameFoods.add(nameFoods);
           listPrices.add(prices);
           listAmount.add(amounts);
           listSums.add(sums);
+          totals.add(total);
         });
       }
     });
@@ -65,38 +72,89 @@ class _OrderListShopState extends State<OrderListShop> {
           ? MyStyle().showProgress()
           : ListView.builder(
               itemCount: orderModels.length,
-              itemBuilder: (context, index) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyStyle().showTitle(orderModels[index].nameUser),
-                  MyStyle().showTitleH3(orderModels[index].orderDateTime),
-                  buildTitle(),
-                  ListView.builder(
-                    itemCount: listNameFoods[index].length,
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    itemBuilder: (context, index2) => Row(
-                      children: [
-                        Expanded(
-                          flex: 4,
-                          child: Text(listNameFoods[index][index2]),
+              itemBuilder: (context, index) => Card(color: index%2 == 0 ? Colors.lime.shade100 : Colors.lime.shade500 ,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MyStyle().showTitle(orderModels[index].nameUser),
+                      MyStyle().showTitleH3(orderModels[index].orderDateTime),
+                      buildTitle(),
+                      ListView.builder(
+                        itemCount: listNameFoods[index].length,
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemBuilder: (context, index2) => Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 3,
+                                child: Text(listNameFoods[index][index2]),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(listPrices[index][index2]),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(listAmount[index][index2]),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Text(listSums[index][index2]),
+                              ),
+                            ],
+                          ),
                         ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(listPrices[index][index2]),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(listAmount[index][index2]),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Text(listSums[index][index2]),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 5,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                MyStyle().showTitleH2('Total :'),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child:
+                                MyStyle().showTitleH3Red(totals[index].toString()),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          RaisedButton.icon(
+                              color: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.cancel,
+                                color: Colors.white,
+                              ),
+                              label: Text(
+                                'Cancel',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                          RaisedButton.icon(
+                              color: Colors.green,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30)),
+                              onPressed: () {},
+                              icon: Icon(Icons.restaurant, color: Colors.white,),
+                              label: Text('Cooking', style: TextStyle(color: Colors.white),)),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
     );
@@ -105,11 +163,11 @@ class _OrderListShopState extends State<OrderListShop> {
   Container buildTitle() {
     return Container(
       padding: EdgeInsets.all(4),
-      decoration: BoxDecoration(color: Colors.grey.shade300),
+      decoration: BoxDecoration(color: Colors.lime.shade700),
       child: Row(
         children: [
           Expanded(
-            flex: 4,
+            flex: 3,
             child: Text('Name Food'),
           ),
           Expanded(
